@@ -2,10 +2,17 @@ package models;
 
 import java.util.*;
 
+import play.db.ebean.*;
 import play.data.validation.Constraints.*;
 
-public class Task {
+import javax.persistence.*;
 
+import play.data.validation.Constraints.*;
+
+@Entity
+public class Task extends Model {
+
+    @Id
     public Long id;
 
     @Required
@@ -27,22 +34,32 @@ public class Task {
         return ++currId;
     }
 
+    /**
+     * Repository for Java Persistence API (JPA).
+     */
+    public static Finder<Long, Task> find = new Finder(
+            Long.class, Task.class
+    );
+
     public static List<Task> all() {
-        return tasks;
+//        return tasks;
+        return find.all();
     }
 
     public static void create(final Task task) {
-        task.id = nextId();
-        tasks.add(task);
+//        task.id = nextId();
+//        tasks.add(task);
+        task.save();
     }
 
     public static void delete(final Long id) {
-        final Iterator<Task> i = tasks.iterator();
-        while (i.hasNext()) {
-            if (i.next().id == id) {
-                i.remove();
-            }
-        }
+//        final Iterator<Task> i = tasks.iterator();
+//        while (i.hasNext()) {
+//            if (i.next().id == id) {
+//                i.remove();
+//            }
+//        }
+        find.ref(id).delete();
     }
 
 }
